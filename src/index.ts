@@ -7,6 +7,15 @@ function isOpcao(val: string): val is typeof OPCOES[number] {
   return (OPCOES as readonly string[]).includes(val);
 }
 
+function ErroFinal(...mensagem: string[]) {
+  console.error(
+    chalk.bold(
+      chalk.red("ERRO:"), 
+      ...mensagem
+      )
+    );
+}
+
 program
   .name("livro")
   .description("Conversor do livro")
@@ -20,21 +29,22 @@ program
     "Escolhe o arquivo de manifesto do livro",
     "./manifest.json"
   )
-  .action((tipo: string) => {
+  .action((tipo: string, options) => {
     if (!isOpcao(tipo)) {
-      console.error(
-        chalk.bold(
-          chalk.red("ERRO:"), 
-          chalk.grey("Tipo de saída inválido.\n"),
-          chalk.grey.italic(`Tipos válidos: ${OPCOES.join(", ")}`)
-          )
-        );
-        return;
+      ErroFinal(
+        chalk.grey("Opção inválida"),
+        chalk.grey.italic(`Tipos válidos: ${OPCOES.join(", ")}`)
+      )
+      return;
     }
 
     if (tipo == 'print') {
+      if (!options.manifest) {
+        ErroFinal("Opção manifest não existe", "não é possível chegar aqui");
+        return;
+      }
       console.log(chalk.bgWhite.black.bold("[PRINT]") + ": " + chalk.greenBright("Gerando documento..."));
-      handlePrint();
+      handlePrint(options.manifest);
     } else {
       console.log(chalk.bgWhite.black.bold("[WEB]") + ": " + chalk.greenBright("Gerando documento..."));
     }

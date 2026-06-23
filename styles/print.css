@@ -1,0 +1,314 @@
+/* ==========================================================================
+   Base e Tipografia
+   ========================================================================== */
+body {
+  /* Fontes clássicas de impressão. Garamond e Palatino são excelentes para livros */
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-size: 11pt; /* Unidade de ponto (pt) é a melhor prática para impressão */
+  line-height: 1.45;
+  color: #111; /* Preto um pouco mais suave, simulando tinta no papel */
+  background-color: #fdfaf6; /* Um leve tom "off-white" para descansar a vista na tela */
+  
+  max-width: 65ch; /* Mantém linhas com cerca de 65 caracteres para leitura confortável na tela */
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ==========================================================================
+   Parágrafos e Ritmo de Leitura (Estilo Impresso)
+   ========================================================================== */
+p:not(.author) {
+  text-align: justify;
+  hyphens: auto; /* Fundamental para texto justificado não ficar com "rios" de espaço em branco */
+  margin: 0; /* Removemos a margem padrão... */
+}
+
+/* Indenta apenas os parágrafos subsequentes. 
+   O primeiro parágrafo de um capítulo NUNCA é indentado em livros tradicionais. */
+p + p:not(.author) {
+  text-indent: 1.5em; 
+}
+
+ul li:not(#TOC li, .capaCapitulo li) {
+  padding: 4px 0 4px 22px;
+	list-style: none;
+	background-image: url("i-asterisk.svg");
+	background-repeat: no-repeat;
+	background-position: left top 4px;
+	background-size: 20px;
+}
+
+ul {
+  page-break-inside: avoid;
+}
+
+p + hr {
+  margin: 3em 0 3em;
+}
+
+/* ==========================================================================
+   Cabeçalhos (Títulos e Capítulos)
+   ========================================================================== */
+h1, h2, h3 {
+  font-family: "Georgia", serif;
+  font-weight: normal;
+  color: #000;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  page-break-after: avoid; /* Evita que o título fique na página e o texto vá para a outra */
+}
+
+h1 {
+  font-size: 2.2em;
+  text-align: center;
+  margin-top: 3em; /* Dá um respiro maior no topo, como o início de um capítulo */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-style: italic;
+}
+
+/* ==========================================================================
+   Imagens e Figuras
+   ========================================================================== */
+figure {
+  margin: 2em 0;
+  text-align: center;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  /* Um leve filtro P&B se quiser simular um livro impresso monocromático */
+  /* filter: grayscale(100%) contrast(120%); */ 
+}
+
+figcaption {
+  font-size: 0.85em;
+  font-style: italic;
+  margin-top: 0.5em;
+  color: #444;
+}
+
+div.sourceCode {
+  border-radius: 8px;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #e4e2df;
+  
+  page-break-inside: avoid;
+}
+
+.space {
+  margin: 3.5em 0;
+}
+
+.break {
+  page-break-after: always;
+}
+
+.not-just p {
+  text-align: left;
+}
+
+thead th {
+  padding: 10px;
+  border-bottom: #111 1px dashed;
+}
+
+/* ==========================================================================
+   Sumário e Autores (Gerado pelo Pandoc via --toc)
+   ========================================================================== */
+#TOC {
+  margin: 3em 0;
+  font-family: sans-serif;
+  page-break-before: left;
+}
+
+#TOC ul {
+  list-style-type: none;
+  padding-left: 1.5em;
+}
+
+#TOC > ul {
+  padding-left: 0;
+}
+
+#TOC a {
+  text-decoration: none;
+  color: #111;
+  display: flex;
+  justify-content: baseline; 
+}
+
+#TOC a::before {
+  content: "";
+  display: block;
+  height: 0.8ch;
+  align-self: center;
+  order: 1; 
+  flex-grow: 1; 
+  border-bottom: 2px dotted #aaa; 
+  margin: 0 24px; 
+}
+
+#TOC a::after {
+  content: target-counter(attr(href), page);
+  font-family: "Georgia", serif;
+  font-style: normal;
+  text-align: right;
+  order: 2;
+  width: 3ch;
+}
+
+#TOC li {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+#TOC a:hover {
+  text-decoration: underline;
+}
+
+.author {
+  margin: 0 auto;
+  text-align: center;
+  font-weight: 800;
+}
+
+:nth-last-child(1 of .author) {
+  page-break-after: always;
+}
+
+figure, table {
+  page-break-inside: avoid;
+  margin: 2em auto;
+}
+
+
+/* ==========================================================================
+   Paged Media
+   ========================================================================== */
+
+@page {
+  size: A4;
+  margin-top: 20mm;
+  margin-bottom: 20mm;
+  
+  @bottom-right {
+    content: counter(page);
+    font-family: "Georgia", serif;
+    font-size: 9pt;
+  }
+}
+
+@page :right {
+  margin-left: 35mm;
+  margin-right: 15mm;
+  
+  @top-right {
+    content: string(chapterTitle);
+    font-family: "Georgia", serif;
+    font-style: italic;
+    font-size: 8.5pt;
+    color: #555;
+  }
+}
+
+@page :left {
+  margin-left: 15mm;
+  margin-right: 35mm;
+  
+  @bottom-left {
+    content: counter(page);
+    font-family: "Georgia", serif;
+    font-size: 9pt;
+  }
+  @bottom-right {
+    content: none; 
+  }
+
+  @top-left {
+    content: "Guia Mobile";
+    font-family: "Georgia", serif;
+    font-size: 8.5pt;
+    color: #555;
+  }
+}
+
+@page :first {
+  @top-right { content: none; }
+  @top-left { content: none; }
+  @bottom-right { content: none; }
+  @bottom-left { content: none; }
+}
+
+@page :blank {
+  @top-center {
+    content: "Página em branco";
+    font-family: "Georgia", serif;
+    font-size: 8.5pt;
+    font-style: italic;
+    color: #555;
+  }
+  @top-right { content: none; }
+  @top-left { content: none; }
+  @bottom-right { content: none; }
+  @bottom-left { content: none; }
+}
+
+
+.not-just h1 {
+  /* Paged Media */
+  string-set: chapterTitle content() !important; 
+}
+
+
+/* ==========================================================================
+   Capítulos
+   ========================================================================== */
+.capaCapitulo {
+  page: capa-capitulo;
+  page-break-before: left;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.capaCapitulo h1 {
+  /* Paged Media */
+  string-set: chapterTitle content();
+}
+
+.capaCapitulo ul {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 1.5em;
+  justify-content: space-around;
+  margin: auto 0;
+}
+
+.capaCapitulo li {
+  margin: 0;
+	padding: 36px 0 36px 44px;
+	list-style: none;
+	background-image: url("i-asterisk.svg");
+	background-repeat: no-repeat;
+	background-position: left top 32px;
+	background-size: 40px;
+  width: 40%;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #333;
+}
+
+.capaCapitulo hr {
+  margin: 10px 0 10px;
+  page-break-after: always;
+  border: none;
+  border-top: 2px dashed #999;
+}
